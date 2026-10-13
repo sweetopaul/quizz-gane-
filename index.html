@@ -141,7 +141,6 @@ button:disabled { opacity: 0.6; cursor: default; }
 <body>
 <div class="container">
 
-<!-- HOME -->
 <section id="homePage">
     <h1>💜 Sweeto Quiz 💜</h1>
     <p style="text-align:center">How well do you know Sweeto?</p>
@@ -153,8 +152,9 @@ button:disabled { opacity: 0.6; cursor: default; }
         Start Quiz
     </button>
 
-    <button class="main-button secondary" onclick="showHistory()">
-        Players & Rankings
+    <button class="main-button secondary"
+            onclick="askForRankings()">
+        🔒 Players & Rankings
     </button>
 
     <p class="small-text">
@@ -162,7 +162,6 @@ button:disabled { opacity: 0.6; cursor: default; }
     </p>
 </section>
 
-<!-- QUIZ -->
 <section id="quizPage" class="hidden">
     <h2>Sweeto Quiz</h2>
     <p id="welcomeText"></p>
@@ -180,7 +179,6 @@ button:disabled { opacity: 0.6; cursor: default; }
             onclick="nextQuestion()">Next Question</button>
 </section>
 
-<!-- RESULT -->
 <section id="resultPage" class="hidden">
     <h1>🎉 Quiz Completed!</h1>
     <p id="resultName" style="text-align:center"></p>
@@ -193,62 +191,84 @@ button:disabled { opacity: 0.6; cursor: default; }
     </button>
 
     <button class="main-button" onclick="restartQuiz()">Play Again</button>
-    <button class="main-button secondary" onclick="showHistory()">
-        View Rankings
-    </button>
+
+    <button class="main-button secondary"
+            onclick="askForRankings()">View Rankings</button>
+
     <button class="main-button secondary" onclick="goHome()">Home</button>
 </section>
 
-<!-- ANSWER REVIEW -->
 <section id="reviewPage" class="hidden">
     <h1>Answer Review</h1>
     <p id="reviewHeading"></p>
     <div id="reviewContainer"></div>
 
     <button class="main-button" onclick="restartQuiz()">Play Again</button>
-    <button class="main-button secondary" onclick="showHistory()">
-        View Rankings
-    </button>
+
+    <button class="main-button secondary"
+            onclick="askForRankings()">View Rankings</button>
+
     <button class="main-button secondary" onclick="goHome()">Home</button>
 </section>
 
-<!-- ONLINE RANKINGS -->
 <section id="historyPage" class="hidden">
     <h1>🏆 Players & Rankings</h1>
     <p class="small-text">Shared online scores from all players.</p>
     <div id="historyContainer"></div>
 
-    <button class="main-button secondary" onclick="showHistory()">
-        Refresh Rankings
-    </button>
+    <button class="main-button secondary"
+            onclick="showHistory()">Refresh Rankings</button>
+
     <button class="main-button secondary" onclick="goHome()">Home</button>
 </section>
 
 </div>
 
-<!-- SUPABASE LIBRARY: MUST LOAD BEFORE OUR CODE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-// ======================================
 // SUPABASE CONNECTION
-// ======================================
 
-const SUPABASE_URL = "https://ragtoiqucgtticvudxwx.supabase.co";
+const SUPABASE_URL =
+    "https://ragtoiqucgtticvudxwx.supabase.co";
 
-// This is your publishable key.
-// Never put a secret or service_role key in website code.
-const SUPABASE_KEY = "sb_publishable_cGsjpgwYU3lL5UsAoxWcwA_EwAG9_vp";
+const SUPABASE_KEY =
+    "sb_publishable_cGsjpgwYU3lL5UsAoxWcwA_EwAG9_vp";
 
 const supabaseClient = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
 
+// RANKINGS PASSWORD
+// This is only a basic interface-level password.
 
-// ======================================
+const RANKINGS_PASSWORD = "leona";
+
+let rankingsUnlocked = false;
+
+function askForRankings() {
+    // Ask again each time rankings are opened.
+    rankingsUnlocked = false;
+
+    const password = prompt(
+        "🔒 Enter password to view Players & Rankings:"
+    );
+
+    if (password === null) {
+        return;
+    }
+
+    if (password === RANKINGS_PASSWORD) {
+        rankingsUnlocked = true;
+        showHistory();
+    } else {
+        alert("❌ Incorrect password! Rankings are private. 💜");
+    }
+}
+
+
 // QUESTIONS
-// ======================================
 
 const questions = [
     {
@@ -324,9 +344,7 @@ const questions = [
 ];
 
 
-// ======================================
 // VARIABLES
-// ======================================
 
 let currentQuestion = 0;
 let score = 0;
@@ -336,9 +354,7 @@ let answerSelected = false;
 let currentAttempt = null;
 
 
-// ======================================
 // PAGE NAVIGATION
-// ======================================
 
 function showPage(pageId) {
     const pages = [
@@ -357,9 +373,7 @@ function showPage(pageId) {
 }
 
 
-// ======================================
 // START QUIZ
-// ======================================
 
 function startQuiz() {
     const nameInput = document.getElementById("playerName");
@@ -384,9 +398,7 @@ function startQuiz() {
 }
 
 
-// ======================================
 // DISPLAY QUESTION
-// ======================================
 
 function showQuestion() {
     answerSelected = false;
@@ -407,9 +419,13 @@ function showQuestion() {
     feedback.className = "feedback hidden";
     feedback.textContent = "";
 
-    document.getElementById("nextButton").classList.add("hidden");
+    const nextButton = document.getElementById("nextButton");
+    nextButton.classList.add("hidden");
+    nextButton.disabled = false;
 
-    const optionsContainer = document.getElementById("optionsContainer");
+    const optionsContainer =
+        document.getElementById("optionsContainer");
+
     optionsContainer.innerHTML = "";
 
     question.options.forEach(function(option) {
@@ -426,9 +442,7 @@ function showQuestion() {
 }
 
 
-// ======================================
 // CHECK ANSWER
-// ======================================
 
 function checkAnswer(selectedAnswer, selectedButton) {
     if (answerSelected) return;
@@ -482,9 +496,7 @@ function checkAnswer(selectedAnswer, selectedButton) {
 }
 
 
-// ======================================
 // NEXT QUESTION
-// ======================================
 
 function nextQuestion() {
     if (!answerSelected) return;
@@ -499,9 +511,7 @@ function nextQuestion() {
 }
 
 
-// ======================================
-// FINISH QUIZ AND SAVE ONLINE
-// ======================================
+// FINISH QUIZ AND SAVE SCORE
 
 async function finishQuiz() {
     const saveStatus = document.getElementById("saveStatus");
@@ -510,7 +520,6 @@ async function finishQuiz() {
     nextButton.disabled = true;
     saveStatus.textContent = "Saving your score online...";
 
-    // Keep the result available for review even if internet saving fails.
     currentAttempt = {
         id: null,
         name: player,
@@ -566,23 +575,20 @@ async function finishQuiz() {
                 : ""
         };
 
-        saveStatus.textContent =
-            "✅ Your score is saved online!";
+        saveStatus.textContent = "✅ Your score is saved online!";
 
     } catch (error) {
         console.error("Supabase save error:", error);
 
         saveStatus.textContent =
-            "❌ Online saving failed. Please check the database permissions and browser console.";
+            "❌ Online saving failed. Check Supabase permissions.";
     } finally {
         nextButton.disabled = false;
     }
 }
 
 
-// ======================================
 // CREATE ANSWER REVIEW
-// ======================================
 
 function createAnswerReview(attempt) {
     const container = document.getElementById("reviewContainer");
@@ -621,9 +627,7 @@ function createAnswerReview(attempt) {
 }
 
 
-// ======================================
 // REVIEW MY ANSWERS
-// ======================================
 
 function viewMyAnswers() {
     if (!currentAttempt) {
@@ -640,11 +644,16 @@ function viewMyAnswers() {
 }
 
 
-// ======================================
-// SHOW SHARED ONLINE RANKINGS
-// ======================================
+// SHOW ONLINE RANKINGS
 
 async function showHistory() {
+    // Prevent opening rankings without the interface password.
+    if (!rankingsUnlocked) {
+        showPage("homePage");
+        askForRankings();
+        return;
+    }
+
     const container = document.getElementById("historyContainer");
     container.textContent = "Loading online rankings...";
 
@@ -719,7 +728,14 @@ async function showHistory() {
 
             const reviewButton = document.createElement("button");
             reviewButton.textContent = "Review Answers";
+
             reviewButton.addEventListener("click", function() {
+                if (!rankingsUnlocked) {
+                    alert("Enter the rankings password first.");
+                    showPage("homePage");
+                    return;
+                }
+
                 reviewPlayer(attempt);
             });
 
@@ -735,16 +751,20 @@ async function showHistory() {
         console.error("Supabase rankings error:", error);
 
         container.textContent =
-            "Could not load online rankings. Please check your internet connection and Supabase permissions.";
+            "Could not load rankings. Check your internet connection and Supabase permissions.";
     }
 }
 
 
-// ======================================
 // REVIEW ANY PLAYER'S ANSWERS
-// ======================================
 
 function reviewPlayer(attempt) {
+    if (!rankingsUnlocked) {
+        alert("Rankings are private.");
+        showPage("homePage");
+        return;
+    }
+
     document.getElementById("reviewHeading").textContent =
         attempt.name + " — Score: " +
         attempt.score + " / " + attempt.total;
@@ -754,11 +774,10 @@ function reviewPlayer(attempt) {
 }
 
 
-// ======================================
 // HOME AND RESTART
-// ======================================
 
 function goHome() {
+    rankingsUnlocked = false;
     showPage("homePage");
 }
 
