@@ -7,9 +7,7 @@
 <title>Sweeto Quiz</title>
 
 <style>
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     font-family: Arial, sans-serif;
@@ -52,22 +50,15 @@ button {
     cursor: pointer;
 }
 
-button:hover {
-    background: #5b21b6;
-}
+button:hover { background: #5b21b6; }
+button:disabled { opacity: 0.6; cursor: default; }
 
 .main-button {
     width: 100%;
     margin-top: 12px;
 }
 
-.secondary {
-    background: #475569;
-}
-
-.danger {
-    background: #dc2626;
-}
+.secondary { background: #475569; }
 
 .option {
     display: block;
@@ -80,10 +71,7 @@ button:hover {
     border: 2px solid transparent;
 }
 
-.option:disabled {
-    cursor: default;
-    opacity: 1;
-}
+.option:disabled { opacity: 1; }
 
 .correct {
     background: #bbf7d0 !important;
@@ -97,9 +85,7 @@ button:hover {
     color: #7f1d1d !important;
 }
 
-.hidden {
-    display: none;
-}
+.hidden { display: none; }
 
 .progress {
     height: 10px;
@@ -122,15 +108,8 @@ button:hover {
     font-weight: bold;
 }
 
-.good {
-    background: #dcfce7;
-    color: #166534;
-}
-
-.bad {
-    background: #fee2e2;
-    color: #991b1b;
-}
+.good { background: #dcfce7; color: #166534; }
+.bad { background: #fee2e2; color: #991b1b; }
 
 .score {
     font-size: 42px;
@@ -148,17 +127,9 @@ button:hover {
     border-radius: 8px;
 }
 
-.gold {
-    border-left: 5px solid #eab308;
-}
-
-.silver {
-    border-left: 5px solid #94a3b8;
-}
-
-.bronze {
-    border-left: 5px solid #b45309;
-}
+.gold { border-left: 5px solid #eab308; }
+.silver { border-left: 5px solid #94a3b8; }
+.bronze { border-left: 5px solid #b45309; }
 
 .small-text {
     font-size: 13px;
@@ -168,26 +139,21 @@ button:hover {
 </head>
 
 <body>
-
 <div class="container">
 
-<!-- HOME PAGE -->
+<!-- HOME -->
 <section id="homePage">
     <h1>💜 Sweeto Quiz 💜</h1>
-
-    <p style="text-align:center">
-        How well do you know Sweeto?
-    </p>
+    <p style="text-align:center">How well do you know Sweeto?</p>
 
     <input type="text" id="playerName"
-           placeholder="Enter your name">
+           placeholder="Enter your name" maxlength="50">
 
     <button class="main-button" onclick="startQuiz()">
         Start Quiz
     </button>
 
-    <button class="main-button secondary"
-            onclick="showHistory()">
+    <button class="main-button secondary" onclick="showHistory()">
         Players & Rankings
     </button>
 
@@ -196,12 +162,9 @@ button:hover {
     </p>
 </section>
 
-
-<!-- QUIZ PAGE -->
+<!-- QUIZ -->
 <section id="quizPage" class="hidden">
-
     <h2>Sweeto Quiz</h2>
-
     <p id="welcomeText"></p>
     <p id="questionNumber"></p>
 
@@ -210,87 +173,83 @@ button:hover {
     </div>
 
     <h3 id="questionText"></h3>
-
     <div id="optionsContainer"></div>
-
     <div id="feedback" class="feedback hidden"></div>
 
     <button id="nextButton" class="main-button hidden"
-            onclick="nextQuestion()">
-        Next Question
-    </button>
+            onclick="nextQuestion()">Next Question</button>
 </section>
 
-
-<!-- RESULT PAGE -->
+<!-- RESULT -->
 <section id="resultPage" class="hidden">
-
     <h1>🎉 Quiz Completed!</h1>
-
     <p id="resultName" style="text-align:center"></p>
-
     <div class="score" id="finalScore"></div>
-
     <h3 id="resultMessage"></h3>
+    <p id="saveStatus" class="small-text"></p>
 
     <button class="main-button" onclick="viewMyAnswers()">
         Review My Answers
     </button>
 
-    <button class="main-button" onclick="restartQuiz()">
-        Play Again
-    </button>
-
+    <button class="main-button" onclick="restartQuiz()">Play Again</button>
     <button class="main-button secondary" onclick="showHistory()">
         View Rankings
     </button>
-
-    <button class="main-button secondary" onclick="goHome()">
-        Home
-    </button>
+    <button class="main-button secondary" onclick="goHome()">Home</button>
 </section>
 
-
-<!-- ANSWER REVIEW PAGE -->
+<!-- ANSWER REVIEW -->
 <section id="reviewPage" class="hidden">
-
     <h1>Answer Review</h1>
     <p id="reviewHeading"></p>
-
     <div id="reviewContainer"></div>
 
-    <button class="main-button" onclick="restartQuiz()">
-        Play Again
-    </button>
-
+    <button class="main-button" onclick="restartQuiz()">Play Again</button>
     <button class="main-button secondary" onclick="showHistory()">
         View Rankings
     </button>
-
-    <button class="main-button secondary" onclick="goHome()">
-        Home
-    </button>
+    <button class="main-button secondary" onclick="goHome()">Home</button>
 </section>
 
-
-<!-- HISTORY PAGE -->
+<!-- ONLINE RANKINGS -->
 <section id="historyPage" class="hidden">
-
     <h1>🏆 Players & Rankings</h1>
-
+    <p class="small-text">Shared online scores from all players.</p>
     <div id="historyContainer"></div>
 
-    <button class="main-button secondary" onclick="goHome()">
-        Home
+    <button class="main-button secondary" onclick="showHistory()">
+        Refresh Rankings
     </button>
+    <button class="main-button secondary" onclick="goHome()">Home</button>
 </section>
 
 </div>
 
+<!-- SUPABASE LIBRARY: MUST LOAD BEFORE OUR CODE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+// ======================================
+// SUPABASE CONNECTION
+// ======================================
 
+const SUPABASE_URL = "https://ragtoiqucgtticvudxwx.supabase.co";
+
+// This is your publishable key.
+// Never put a secret or service_role key in website code.
+const SUPABASE_KEY = "sb_publishable_cGsjpgwYU3lL5UsAoxWcwA_EwAG9_vp";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+
+// ======================================
 // QUESTIONS
+// ======================================
+
 const questions = [
     {
         question: "1. What is Sweeto's biggest wish in 2027?",
@@ -353,13 +312,11 @@ const questions = [
         answer: "Dhoni"
     },
     {
-        // Example question: change it if needed.
         question: "9. Which sport does Sweeto enjoy?",
         options: ["Football", "Basketball", "Tennis", "Badminton"],
         answer: "Football"
     },
     {
-        // Example question: change it if needed.
         question: "10. Which IPL team does Sweeto support?",
         options: ["CSK", "MI", "RCB", "KKR"],
         answer: "CSK"
@@ -367,45 +324,22 @@ const questions = [
 ];
 
 
+// ======================================
 // VARIABLES
+// ======================================
+
 let currentQuestion = 0;
 let score = 0;
 let player = "";
 let playerAnswers = [];
 let answerSelected = false;
-let currentAttemptId = null;
-
-const HISTORY_KEY = "sweetoQuizHistory";
+let currentAttempt = null;
 
 
-// GET SAVED HISTORY
-function getHistory() {
-    try {
-        const history = JSON.parse(
-            localStorage.getItem(HISTORY_KEY)
-        );
+// ======================================
+// PAGE NAVIGATION
+// ======================================
 
-        return Array.isArray(history) ? history : [];
-    } catch (error) {
-        return [];
-    }
-}
-
-
-// SAVE HISTORY
-function saveHistory(history) {
-    try {
-        localStorage.setItem(
-            HISTORY_KEY,
-            JSON.stringify(history)
-        );
-    } catch (error) {
-        alert("Unable to save history in this browser.");
-    }
-}
-
-
-// SHOW ONE PAGE
 function showPage(pageId) {
     const pages = [
         "homePage",
@@ -423,10 +357,12 @@ function showPage(pageId) {
 }
 
 
+// ======================================
 // START QUIZ
+// ======================================
+
 function startQuiz() {
     const nameInput = document.getElementById("playerName");
-
     player = nameInput.value.trim();
 
     if (player === "") {
@@ -438,7 +374,7 @@ function startQuiz() {
     currentQuestion = 0;
     score = 0;
     playerAnswers = [];
-    currentAttemptId = null;
+    currentAttempt = null;
 
     document.getElementById("welcomeText").textContent =
         "Good luck, " + player + "!";
@@ -448,7 +384,10 @@ function startQuiz() {
 }
 
 
+// ======================================
 // DISPLAY QUESTION
+// ======================================
+
 function showQuestion() {
     answerSelected = false;
 
@@ -468,17 +407,13 @@ function showQuestion() {
     feedback.className = "feedback hidden";
     feedback.textContent = "";
 
-    const nextButton = document.getElementById("nextButton");
-    nextButton.classList.add("hidden");
+    document.getElementById("nextButton").classList.add("hidden");
 
-    const optionsContainer =
-        document.getElementById("optionsContainer");
-
+    const optionsContainer = document.getElementById("optionsContainer");
     optionsContainer.innerHTML = "";
 
     question.options.forEach(function(option) {
         const button = document.createElement("button");
-
         button.textContent = option;
         button.className = "option";
 
@@ -491,20 +426,19 @@ function showQuestion() {
 }
 
 
+// ======================================
 // CHECK ANSWER
+// ======================================
+
 function checkAnswer(selectedAnswer, selectedButton) {
-    if (answerSelected) {
-        return;
-    }
+    if (answerSelected) return;
 
     answerSelected = true;
 
     const question = questions[currentQuestion];
     const isCorrect = selectedAnswer === question.answer;
 
-    if (isCorrect) {
-        score++;
-    }
+    if (isCorrect) score++;
 
     playerAnswers.push({
         question: question.question,
@@ -513,9 +447,7 @@ function checkAnswer(selectedAnswer, selectedButton) {
         isCorrect: isCorrect
     });
 
-    const buttons = document.querySelectorAll(".option");
-
-    buttons.forEach(function(button) {
+    document.querySelectorAll(".option").forEach(function(button) {
         button.disabled = true;
 
         if (button.textContent === question.answer) {
@@ -536,7 +468,6 @@ function checkAnswer(selectedAnswer, selectedButton) {
     } else {
         feedback.textContent =
             "Wrong answer! Correct answer: " + question.answer;
-
         feedback.classList.add("bad");
     }
 
@@ -551,11 +482,12 @@ function checkAnswer(selectedAnswer, selectedButton) {
 }
 
 
+// ======================================
 // NEXT QUESTION
+// ======================================
+
 function nextQuestion() {
-    if (!answerSelected) {
-        return;
-    }
+    if (!answerSelected) return;
 
     currentQuestion++;
 
@@ -567,23 +499,26 @@ function nextQuestion() {
 }
 
 
-// FINISH QUIZ
-function finishQuiz() {
-    const history = getHistory();
+// ======================================
+// FINISH QUIZ AND SAVE ONLINE
+// ======================================
 
-    const attempt = {
-        id: Date.now() + "-" + Math.random(),
+async function finishQuiz() {
+    const saveStatus = document.getElementById("saveStatus");
+    const nextButton = document.getElementById("nextButton");
+
+    nextButton.disabled = true;
+    saveStatus.textContent = "Saving your score online...";
+
+    // Keep the result available for review even if internet saving fails.
+    currentAttempt = {
+        id: null,
         name: player,
         score: score,
         total: questions.length,
         answers: playerAnswers,
         date: new Date().toLocaleString()
     };
-
-    currentAttemptId = attempt.id;
-
-    history.push(attempt);
-    saveHistory(history);
 
     document.getElementById("resultName").textContent =
         "Well done, " + player + "!";
@@ -604,31 +539,53 @@ function finishQuiz() {
     }
 
     document.getElementById("resultMessage").textContent = message;
-
     showPage("resultPage");
-}
 
+    try {
+        const { data, error } = await supabaseClient
+            .from("quiz_scores")
+            .insert([{
+                player_name: player,
+                score: score,
+                total: questions.length,
+                answers: playerAnswers
+            }])
+            .select("id, player_name, score, total, answers, created_at")
+            .single();
 
-// SAFE HTML TEXT
-function escapeHTML(value) {
-    return String(value ?? "").replace(/[&<>"']/g, function(char) {
-        const characters = {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#39;"
+        if (error) throw error;
+
+        currentAttempt = {
+            id: data.id,
+            name: data.player_name,
+            score: data.score,
+            total: data.total,
+            answers: data.answers,
+            date: data.created_at
+                ? new Date(data.created_at).toLocaleString()
+                : ""
         };
 
-        return characters[char];
-    });
+        saveStatus.textContent =
+            "✅ Your score is saved online!";
+
+    } catch (error) {
+        console.error("Supabase save error:", error);
+
+        saveStatus.textContent =
+            "❌ Online saving failed. Please check the database permissions and browser console.";
+    } finally {
+        nextButton.disabled = false;
+    }
 }
 
 
+// ======================================
 // CREATE ANSWER REVIEW
+// ======================================
+
 function createAnswerReview(attempt) {
     const container = document.getElementById("reviewContainer");
-
     container.innerHTML = "";
 
     if (!Array.isArray(attempt.answers)) {
@@ -640,129 +597,154 @@ function createAnswerReview(attempt) {
         const item = document.createElement("div");
         item.className = "review-item";
 
-        const status = answer.isCorrect
+        const heading = document.createElement("strong");
+        heading.textContent = (index + 1) + ". " + answer.question;
+
+        const yourAnswer = document.createElement("p");
+        yourAnswer.textContent = "Your answer: " + answer.selected;
+
+        const correctAnswer = document.createElement("p");
+        correctAnswer.textContent = "Correct answer: " + answer.correct;
+
+        const status = document.createElement("p");
+        status.textContent = answer.isCorrect
             ? "✅ Correct"
             : "❌ Incorrect";
 
-        item.innerHTML = `
-            <strong>${index + 1}. ${escapeHTML(answer.question)}</strong>
-            <p>Your answer: ${escapeHTML(answer.selected)}</p>
-            <p>Correct answer: ${escapeHTML(answer.correct)}</p>
-            <p>${status}</p>
-        `;
+        item.appendChild(heading);
+        item.appendChild(yourAnswer);
+        item.appendChild(correctAnswer);
+        item.appendChild(status);
 
         container.appendChild(item);
     });
 }
 
 
+// ======================================
 // REVIEW MY ANSWERS
+// ======================================
+
 function viewMyAnswers() {
-    const history = getHistory();
-
-    const attempt = history.find(function(item) {
-        return item.id === currentAttemptId;
-    });
-
-    if (!attempt) {
+    if (!currentAttempt) {
         alert("Your quiz result was not found.");
         return;
     }
 
     document.getElementById("reviewHeading").textContent =
-        player + " — Score: " + score + " / " + questions.length;
+        currentAttempt.name + " — Score: " +
+        currentAttempt.score + " / " + currentAttempt.total;
 
-    createAnswerReview(attempt);
+    createAnswerReview(currentAttempt);
     showPage("reviewPage");
 }
 
 
-// SHOW PLAYERS AND RANKINGS
-function showHistory() {
-    const history = getHistory();
+// ======================================
+// SHOW SHARED ONLINE RANKINGS
+// ======================================
 
+async function showHistory() {
     const container = document.getElementById("historyContainer");
-    container.innerHTML = "";
-
-    if (history.length === 0) {
-        container.textContent = "No players have completed the quiz yet.";
-        showPage("historyPage");
-        return;
-    }
-
-    history.sort(function(a, b) {
-        return b.score - a.score;
-    });
-
-    let previousScore = null;
-    let rank = 0;
-
-    history.forEach(function(attempt, index) {
-        if (attempt.score !== previousScore) {
-            rank = index + 1;
-        }
-
-        previousScore = attempt.score;
-
-        let medal = "";
-        let rankClass = "";
-
-        if (rank === 1) {
-            medal = "🥇";
-            rankClass = "gold";
-        } else if (rank === 2) {
-            medal = "🥈";
-            rankClass = "silver";
-        } else if (rank === 3) {
-            medal = "🥉";
-            rankClass = "bronze";
-        }
-
-        const item = document.createElement("div");
-        item.className = "history-item " + rankClass;
-
-        const heading = document.createElement("h3");
-        heading.textContent = medal + " Rank " + rank + ": " + attempt.name;
-
-        const scoreText = document.createElement("p");
-        scoreText.textContent =
-            "Score: " + attempt.score + " / " + attempt.total;
-
-        const dateText = document.createElement("p");
-        dateText.className = "small-text";
-        dateText.textContent = attempt.date || "";
-
-        const reviewButton = document.createElement("button");
-        reviewButton.textContent = "Review Answers";
-        reviewButton.addEventListener("click", function() {
-            reviewPlayer(attempt.id);
-        });
-
-        item.appendChild(heading);
-        item.appendChild(scoreText);
-        item.appendChild(dateText);
-        item.appendChild(reviewButton);
-
-        container.appendChild(item);
-    });
+    container.textContent = "Loading online rankings...";
 
     showPage("historyPage");
+
+    try {
+        const { data, error } = await supabaseClient
+            .from("quiz_scores")
+            .select("id, player_name, score, total, answers, created_at")
+            .order("score", { ascending: false })
+            .order("created_at", { ascending: true });
+
+        if (error) throw error;
+
+        container.innerHTML = "";
+
+        if (!data || data.length === 0) {
+            container.textContent =
+                "No players have completed the quiz yet.";
+            return;
+        }
+
+        let previousScore = null;
+        let rank = 0;
+
+        data.forEach(function(row, index) {
+            const attempt = {
+                id: row.id,
+                name: row.player_name,
+                score: row.score,
+                total: row.total,
+                answers: row.answers,
+                date: row.created_at
+                    ? new Date(row.created_at).toLocaleString()
+                    : ""
+            };
+
+            if (attempt.score !== previousScore) {
+                rank = index + 1;
+            }
+
+            previousScore = attempt.score;
+
+            let medal = "";
+            let rankClass = "";
+
+            if (rank === 1) {
+                medal = "🥇";
+                rankClass = "gold";
+            } else if (rank === 2) {
+                medal = "🥈";
+                rankClass = "silver";
+            } else if (rank === 3) {
+                medal = "🥉";
+                rankClass = "bronze";
+            }
+
+            const item = document.createElement("div");
+            item.className = "history-item " + rankClass;
+
+            const heading = document.createElement("h3");
+            heading.textContent =
+                medal + " Rank " + rank + ": " + attempt.name;
+
+            const scoreText = document.createElement("p");
+            scoreText.textContent =
+                "Score: " + attempt.score + " / " + attempt.total;
+
+            const dateText = document.createElement("p");
+            dateText.className = "small-text";
+            dateText.textContent = attempt.date;
+
+            const reviewButton = document.createElement("button");
+            reviewButton.textContent = "Review Answers";
+            reviewButton.addEventListener("click", function() {
+                reviewPlayer(attempt);
+            });
+
+            item.appendChild(heading);
+            item.appendChild(scoreText);
+            item.appendChild(dateText);
+            item.appendChild(reviewButton);
+
+            container.appendChild(item);
+        });
+
+    } catch (error) {
+        console.error("Supabase rankings error:", error);
+
+        container.textContent =
+            "Could not load online rankings. Please check your internet connection and Supabase permissions.";
+    }
 }
 
 
-// REVIEW A PLAYER'S ANSWERS
-function reviewPlayer(id) {
-    const history = getHistory();
+// ======================================
+// REVIEW ANY PLAYER'S ANSWERS
+// ======================================
 
-    const attempt = history.find(function(item) {
-        return item.id === id;
-    });
-
-    if (!attempt) {
-        alert("Player result not found.");
-        return;
-    }
-
+function reviewPlayer(attempt) {
     document.getElementById("reviewHeading").textContent =
         attempt.name + " — Score: " +
         attempt.score + " / " + attempt.total;
@@ -772,36 +754,18 @@ function reviewPlayer(id) {
 }
 
 
-// CLEAR HISTORY
-function clearHistory() {
-    const confirmed = confirm(
-        "Are you sure you want to delete all saved quiz history?"
-    );
+// ======================================
+// HOME AND RESTART
+// ======================================
 
-    if (!confirmed) {
-        return;
-    }
-
-    localStorage.removeItem(HISTORY_KEY);
-
-    currentAttemptId = null;
-
-    showHistory();
-}
-
-
-// RETURN HOME
 function goHome() {
     showPage("homePage");
 }
 
-
-// RESTART QUIZ
 function restartQuiz() {
     document.getElementById("playerName").value = player;
     startQuiz();
 }
-
 </script>
 
 </body>
