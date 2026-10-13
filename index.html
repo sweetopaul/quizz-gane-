@@ -7,383 +7,335 @@
 <title>Sweeto Quiz</title>
 
 <style>
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
 
 body {
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #dbeafe, #fce7f3);
     margin: 0;
     padding: 20px;
+    color: #333;
 }
 
 .container {
-    max-width: 650px;
-    margin: 30px auto;
-    padding: 25px;
+    max-width: 700px;
+    margin: 25px auto;
     background: white;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px #0002;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px #00000018;
 }
 
-h1, h2, h3 {
-    text-align: center;
+h1, h2 {
     color: #6d28d9;
+    text-align: center;
 }
 
-input {
+input[type="text"] {
     width: 100%;
     padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
     margin: 10px 0;
-    border: 1px solid #aaa;
-    border-radius: 7px;
     font-size: 16px;
 }
 
 button {
-    padding: 12px;
-    margin: 5px 0;
-    border: none;
-    border-radius: 7px;
     background: #7c3aed;
     color: white;
-    font-size: 15px;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
     cursor: pointer;
+    margin: 5px;
+    font-size: 15px;
 }
 
-button:hover { background: #5b21b6; }
-button:disabled { opacity: 0.6; cursor: default; }
-
-.main-button {
-    width: 100%;
-    margin-top: 12px;
+button:hover {
+    background: #5b21b6;
 }
-
-.secondary { background: #475569; }
 
 .option {
     display: block;
-    width: 100%;
-    text-align: left;
-    margin: 10px 0;
-    padding: 14px;
+    padding: 12px;
+    margin: 8px 0;
     background: #f3e8ff;
-    color: #222;
-    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
-.option:disabled { opacity: 1; }
+.option input {
+    margin-right: 8px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.center {
+    text-align: center;
+}
+
+.question {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.progress {
+    color: #6d28d9;
+    font-weight: bold;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+
+th {
+    background: #ede9fe;
+    color: #4c1d95;
+}
 
 .correct {
-    background: #bbf7d0 !important;
-    border-color: #16a34a !important;
-    color: #14532d !important;
+    color: #15803d;
 }
 
 .wrong {
-    background: #fecaca !important;
-    border-color: #dc2626 !important;
-    color: #7f1d1d !important;
+    color: #dc2626;
 }
 
-.hidden { display: none !important; }
-
-.progress {
-    height: 10px;
-    background: #e5e7eb;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 15px 0;
-}
-
-.progress-bar {
-    height: 100%;
-    width: 0;
-    background: #8b5cf6;
-}
-
-.feedback {
-    padding: 12px;
-    border-radius: 7px;
-    margin-top: 15px;
-    font-weight: bold;
-}
-
-.good { background: #dcfce7; color: #166534; }
-.bad { background: #fee2e2; color: #991b1b; }
-
-.score {
-    font-size: 42px;
-    font-weight: bold;
-    color: #7c3aed;
+.message {
     text-align: center;
-    margin: 20px;
-}
-
-.history-item, .review-item {
-    padding: 15px;
     margin: 12px 0;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
+    overflow-wrap: anywhere;
 }
 
-.gold { border-left: 5px solid #eab308; }
-.silver { border-left: 5px solid #94a3b8; }
-.bronze { border-left: 5px solid #b45309; }
+@media (max-width: 500px) {
+    .container {
+        padding: 15px;
+    }
 
-.small-text {
-    font-size: 13px;
-    color: #64748b;
+    button {
+        max-width: 100%;
+    }
+
+    th, td {
+        padding: 6px;
+        font-size: 13px;
+    }
 }
 </style>
 </head>
 
 <body>
-<div class="container">
 
-<!-- HOME -->
-<section id="homePage">
+<div class="container" id="homePage">
     <h1>💜 Sweeto Quiz 💜</h1>
-    <p style="text-align:center">How well do you know Sweeto?</p>
+    <p class="center">Welcome! Enter your name and test your knowledge.</p>
 
-    <input type="text" id="playerName"
-           placeholder="Enter your name" maxlength="50">
+    <label for="playerName">Enter your name:</label>
+    <input type="text" id="playerName" placeholder="Your name">
 
-    <button class="main-button" onclick="startQuiz()">
-        Start Quiz
-    </button>
-
-    <button class="main-button secondary"
-            onclick="askForRankings()">
-        🔒 Players & Rankings
-    </button>
-
-    <p class="small-text">
-        10 questions. Each correct answer gives 1 point.
-    </p>
-</section>
-
-<!-- QUIZ -->
-<section id="quizPage" class="hidden">
-    <h2>Sweeto Quiz</h2>
-    <p id="welcomeText"></p>
-    <p id="questionNumber"></p>
-
-    <div class="progress">
-        <div class="progress-bar" id="progressBar"></div>
+    <div class="center">
+        <button onclick="startQuiz()">Start Quiz</button>
+        <button onclick="askForRankings()">Players &amp; Rankings</button>
     </div>
 
-    <h3 id="questionText"></h3>
-    <div id="optionsContainer"></div>
-    <div id="feedback" class="feedback hidden"></div>
-
-    <button id="nextButton" class="main-button hidden"
-            onclick="nextQuestion()">Next Question</button>
-</section>
-
-<!-- RESULT -->
-<section id="resultPage" class="hidden">
-    <h1>🎉 Quiz Completed!</h1>
-    <p id="resultName" style="text-align:center"></p>
-    <div class="score" id="finalScore"></div>
-    <h3 id="resultMessage"></h3>
-    <p id="saveStatus" class="small-text"></p>
-
-    <button class="main-button" onclick="viewMyAnswers()">
-        Review My Answers
-    </button>
-
-    <button class="main-button" onclick="restartQuiz()">Play Again</button>
-
-    <button class="main-button secondary"
-            onclick="askForRankings()">View Rankings</button>
-
-    <button class="main-button secondary" onclick="goHome()">Home</button>
-</section>
-
-<!-- ANSWER REVIEW -->
-<section id="reviewPage" class="hidden">
-    <h1>Answer Review</h1>
-    <p id="reviewHeading"></p>
-    <div id="reviewContainer"></div>
-
-    <button class="main-button" onclick="restartQuiz()">Play Again</button>
-
-    <button class="main-button secondary"
-            onclick="askForRankings()">View Rankings</button>
-
-    <button class="main-button secondary" onclick="goHome()">Home</button>
-</section>
-
-<!-- RANKINGS: HIDDEN UNTIL PASSWORD IS CORRECT -->
-<section id="historyPage" class="hidden">
-    <h1>🏆 Players & Rankings</h1>
-    <p class="small-text">Shared online scores from all players.</p>
-
-    <div id="historyContainer"></div>
-
-    <button class="main-button secondary"
-            onclick="refreshRankings()">Refresh Rankings</button>
-
-    <button class="main-button secondary" onclick="goHome()">Home</button>
-</section>
-
+    <p id="homeMessage" class="message"></p>
 </div>
 
+<div class="container hidden" id="quizPage">
+    <h2>Sweeto Quiz</h2>
+    <p id="welcomeText" class="center"></p>
+    <p id="progress" class="progress"></p>
+
+    <div id="questionText" class="question"></div>
+    <div id="options"></div>
+
+    <div class="center">
+        <button id="nextButton" onclick="nextQuestion()">Next Question</button>
+    </div>
+
+    <p id="quizMessage" class="message"></p>
+</div>
+
+<div class="container hidden" id="resultPage">
+    <h1>🎉 Quiz Completed!</h1>
+    <h2 id="finalScore"></h2>
+    <p id="saveMessage" class="message"></p>
+
+    <div class="center">
+        <button onclick="showReview()">Review Answers</button>
+        <button onclick="goHome()">Home</button>
+        <button onclick="askForRankings()">Players &amp; Rankings</button>
+    </div>
+</div>
+
+<div class="container hidden" id="reviewPage">
+    <h2>Answer Review</h2>
+    <div id="reviewContent"></div>
+
+    <div class="center">
+        <button onclick="showPage('resultPage')">Back to Result</button>
+        <button onclick="goHome()">Home</button>
+    </div>
+</div>
+
+<div class="container hidden" id="historyPage">
+    <h2>🏆 Players &amp; Rankings</h2>
+    <p class="center">Leaderboard of saved quiz attempts</p>
+
+    <div class="center">
+        <button onclick="loadRankings()">Refresh Rankings</button>
+        <button onclick="lockRankings()">Lock Rankings</button>
+        <button onclick="goHome()">Home</button>
+    </div>
+
+    <p id="rankingMessage" class="message"></p>
+
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>Score</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody id="rankingBody"></tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Supabase library -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
-// ======================================
-// SUPABASE CONNECTION
-// ======================================
+// ------------------------------------
+// 1. SUPABASE CONNECTION
+// ------------------------------------
 
-const SUPABASE_URL =
-    "https://ragtoiqucgtticvudxwx.supabase.co";
+const SUPABASE_URL = "https://ragtoiqucgtticvudxwx.supabase.co";
 
 const SUPABASE_KEY =
     "sb_publishable_cGsjpgwYU3lL5UsAoxWcwA_EwAG9_vp";
 
-const supabaseClient = window.supabase.createClient(
+const db = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
 );
 
-// ======================================
-// RANKINGS PASSWORD
-// ======================================
+// ------------------------------------
+// 2. RANKINGS PASSWORD
+// ------------------------------------
 
 const RANKINGS_PASSWORD = "leona";
 let rankingsUnlocked = false;
 
-function askForRankings() {
-    // Always ask for the password before opening rankings.
-    rankingsUnlocked = false;
-
-    const historyPage = document.getElementById("historyPage");
-    historyPage.classList.add("hidden");
-
-    const password = prompt(
-        "🔒 Enter password to view Players & Rankings:"
-    );
-
-    if (password === RANKINGS_PASSWORD) {
-        rankingsUnlocked = true;
-        showHistory();
-    } else {
-        historyPage.classList.add("hidden");
-
-        if (password !== null) {
-            alert("❌ Wrong password! Rankings are hidden. 💜");
-        }
-    }
-}
-
-function refreshRankings() {
-    if (!rankingsUnlocked) {
-        document.getElementById("historyPage").classList.add("hidden");
-        askForRankings();
-        return;
-    }
-
-    showHistory();
-}
-
-
-// ======================================
-// QUESTIONS
-// ======================================
+// ------------------------------------
+// 3. QUIZ QUESTIONS
+// ------------------------------------
 
 const questions = [
     {
-        question: "1. What is Sweeto's biggest wish in 2027?",
+        question: "What does HTML stand for?",
         options: [
-            "Dhoni winning IPL 2027",
-            "Buying a new Car",
-            "Buying a new phone",
-            "Kerala Blasters winning ISL 2026-2027"
+            "Hyper Text Markup Language",
+            "High Text Machine Language",
+            "Hyper Tool Markup Language",
+            "Home Text Markup Language"
         ],
-        answer: "Kerala Blasters winning ISL 2026-2027"
+        answer: 0
     },
     {
-        question: "2. What is Sweeto scared of?",
-        options: ["Attachments", "Work", "Gossips", "Losing"],
-        answer: "Attachments"
+        question: "Which language is used to style a webpage?",
+        options: ["HTML", "CSS", "SQL", "Python"],
+        answer: 1
     },
     {
-        question: "3. What makes Sweeto happy?",
+        question: "Which language makes webpages interactive?",
+        options: ["CSS", "HTML", "JavaScript", "XML"],
+        answer: 2
+    },
+    {
+        question: "Which HTML tag creates a paragraph?",
+        options: ["<h1>", "<p>", "<div>", "<img>"],
+        answer: 1
+    },
+    {
+        question: "Which symbol starts an ID selector in CSS?",
+        options: [".", "#", "*", "&"],
+        answer: 1
+    },
+    {
+        question: "Which keyword declares a variable in JavaScript?",
+        options: ["var", "let", "const", "All of these"],
+        answer: 3
+    },
+    {
+        question: "Which method selects an element by its ID?",
         options: [
-            "Call from his sister",
-            "Playing football",
-            "Spending time with friends",
-            "Watching football and cricket"
+            "getElementById()",
+            "getElementByName()",
+            "selectId()",
+            "findElement()"
         ],
-        answer: "Call from his sister"
+        answer: 0
     },
     {
-        question: "4. What does Sweeto call his sister?",
-        options: ["Heart", "Jaan", "Varzhaa", "Doll"],
-        answer: "Heart"
+        question: "Which event happens when a button is clicked?",
+        options: ["onchange", "onload", "onclick", "onclose"],
+        answer: 2
     },
     {
-        question: "5. Who is Sweeto's favourite Bollywood actor?",
+        question: "Which property gets the value typed into an input?",
+        options: ["innerHTML", "value", "style", "text"],
+        answer: 1
+    },
+    {
+        question: "Which method adds an element inside another element?",
         options: [
-            "Aamir Khan",
-            "Shah Rukh Khan",
-            "Salman Khan",
-            "Sushant Singh Rajput"
+            "appendChild()",
+            "remove()",
+            "alert()",
+            "prompt()"
         ],
-        answer: "Aamir Khan"
-    },
-    {
-        question: "6. Who is Sweeto's favourite Malayalam actor?",
-        options: ["Dileep", "Mohanlal", "Mammootty", "Prithviraj"],
-        answer: "Dileep"
-    },
-    {
-        question: "7. What makes Sweeto upset?",
-        options: [
-            "When Kerala loses",
-            "Dhoni gets out for a duck",
-            "When his sister doesn't call him",
-            "When his team loses"
-        ],
-        answer: "When his sister doesn't call him"
-    },
-    {
-        question: "8. Who is Sweeto's favourite cricketer?",
-        options: ["Kohli", "Sanju", "Dhoni", "Sachin"],
-        answer: "Dhoni"
-    },
-    {
-        question: "9. Which sport does Sweeto enjoy?",
-        options: ["Football", "Basketball", "Tennis", "Badminton"],
-        answer: "Football"
-    },
-    {
-        question: "10. Which IPL team does Sweeto support?",
-        options: ["CSK", "MI", "RCB", "KKR"],
-        answer: "CSK"
+        answer: 0
     }
 ];
 
+// ------------------------------------
+// 4. QUIZ VARIABLES
+// ------------------------------------
 
-// ======================================
-// VARIABLES
-// ======================================
-
+let playerName = "";
 let currentQuestion = 0;
 let score = 0;
-let player = "";
 let playerAnswers = [];
-let answerSelected = false;
-let currentAttempt = null;
+let savingScore = false;
 
-
-// ======================================
-// PAGE NAVIGATION
-// ======================================
+// ------------------------------------
+// 5. PAGE NAVIGATION
+// ------------------------------------
 
 function showPage(pageId) {
+    if (pageId === "historyPage" && !rankingsUnlocked) {
+        alert("Enter the password to view rankings.");
+        return;
+    }
+
     const pages = [
         "homePage",
         "quizPage",
@@ -392,444 +344,324 @@ function showPage(pageId) {
         "historyPage"
     ];
 
-    pages.forEach(function(page) {
-        document.getElementById(page).classList.add("hidden");
+    pages.forEach(function(id) {
+        document.getElementById(id).classList.add("hidden");
     });
-
-    // Never show rankings unless the password was entered.
-    if (pageId === "historyPage" && !rankingsUnlocked) {
-        document.getElementById("homePage").classList.remove("hidden");
-        return;
-    }
 
     document.getElementById(pageId).classList.remove("hidden");
 }
 
+function goHome() {
+    showPage("homePage");
+}
 
-// ======================================
-// START QUIZ
-// ======================================
+// ------------------------------------
+// 6. START QUIZ
+// ------------------------------------
 
 function startQuiz() {
-    const nameInput = document.getElementById("playerName");
-    player = nameInput.value.trim();
+    playerName = document.getElementById("playerName")
+        .value.trim();
 
-    if (player === "") {
-        alert("Please enter your name first!");
-        nameInput.focus();
+    if (playerName === "") {
+        document.getElementById("homeMessage").innerText =
+            "Please enter your name first.";
         return;
     }
 
-    rankingsUnlocked = false;
     currentQuestion = 0;
     score = 0;
     playerAnswers = [];
-    currentAttempt = null;
 
-    document.getElementById("welcomeText").textContent =
-        "Good luck, " + player + "!";
+    document.getElementById("welcomeText").innerText =
+        "Good luck, " + playerName + "!";
+
+    document.getElementById("homeMessage").innerText = "";
 
     showPage("quizPage");
-    showQuestion();
+    displayQuestion();
 }
 
+// ------------------------------------
+// 7. DISPLAY QUESTION
+// ------------------------------------
 
-// ======================================
-// DISPLAY QUESTION
-// ======================================
+function displayQuestion() {
+    const q = questions[currentQuestion];
 
-function showQuestion() {
-    answerSelected = false;
-
-    const question = questions[currentQuestion];
-
-    document.getElementById("questionNumber").textContent =
+    document.getElementById("progress").innerText =
         "Question " + (currentQuestion + 1) +
         " of " + questions.length;
 
-    document.getElementById("questionText").textContent =
-        question.question;
+    document.getElementById("questionText").innerText =
+        q.question;
 
-    document.getElementById("progressBar").style.width =
-        ((currentQuestion + 1) / questions.length * 100) + "%";
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
 
-    const feedback = document.getElementById("feedback");
-    feedback.className = "feedback hidden";
-    feedback.textContent = "";
+    q.options.forEach(function(option, index) {
+        const label = document.createElement("label");
+        label.className = "option";
 
-    const nextButton = document.getElementById("nextButton");
-    nextButton.classList.add("hidden");
-    nextButton.disabled = false;
+        const radio = document.createElement("input");
+        radio.type = "radio";
+        radio.name = "answer";
+        radio.value = index;
 
-    const optionsContainer =
-        document.getElementById("optionsContainer");
+        label.appendChild(radio);
+        label.appendChild(document.createTextNode(option));
 
-    optionsContainer.innerHTML = "";
-
-    question.options.forEach(function(option) {
-        const button = document.createElement("button");
-        button.textContent = option;
-        button.className = "option";
-
-        button.addEventListener("click", function() {
-            checkAnswer(option, button);
-        });
-
-        optionsContainer.appendChild(button);
-    });
-}
-
-
-// ======================================
-// CHECK ANSWER
-// ======================================
-
-function checkAnswer(selectedAnswer, selectedButton) {
-    if (answerSelected) return;
-
-    answerSelected = true;
-
-    const question = questions[currentQuestion];
-    const isCorrect = selectedAnswer === question.answer;
-
-    if (isCorrect) score++;
-
-    playerAnswers.push({
-        question: question.question,
-        selected: selectedAnswer,
-        correct: question.answer,
-        isCorrect: isCorrect
+        optionsDiv.appendChild(label);
     });
 
-    document.querySelectorAll(".option").forEach(function(button) {
-        button.disabled = true;
+    document.getElementById("quizMessage").innerText = "";
 
-        if (button.textContent === question.answer) {
-            button.classList.add("correct");
-        }
-    });
-
-    if (!isCorrect) {
-        selectedButton.classList.add("wrong");
-    }
-
-    const feedback = document.getElementById("feedback");
-    feedback.classList.remove("hidden");
-
-    if (isCorrect) {
-        feedback.textContent = "Correct answer! 🎉";
-        feedback.classList.add("good");
-    } else {
-        feedback.textContent =
-            "Wrong answer! Correct answer: " + question.answer;
-        feedback.classList.add("bad");
-    }
-
-    const nextButton = document.getElementById("nextButton");
-
-    nextButton.textContent =
+    document.getElementById("nextButton").innerText =
         currentQuestion === questions.length - 1
-        ? "See My Score"
-        : "Next Question";
-
-    nextButton.classList.remove("hidden");
+            ? "Finish Quiz"
+            : "Next Question";
 }
 
-
-// ======================================
-// NEXT QUESTION
-// ======================================
+// ------------------------------------
+// 8. NEXT QUESTION AND SCORING
+// ------------------------------------
 
 function nextQuestion() {
-    if (!answerSelected) return;
+    const selected = document.querySelector(
+        'input[name="answer"]:checked'
+    );
+
+    if (!selected) {
+        document.getElementById("quizMessage").innerText =
+            "Please select an answer.";
+        return;
+    }
+
+    const selectedAnswer = Number(selected.value);
+    const correctAnswer = questions[currentQuestion].answer;
+
+    playerAnswers.push(selectedAnswer);
+
+    if (selectedAnswer === correctAnswer) {
+        score++;
+    }
 
     currentQuestion++;
 
     if (currentQuestion < questions.length) {
-        showQuestion();
+        displayQuestion();
     } else {
         finishQuiz();
     }
 }
 
-
-// ======================================
-// FINISH QUIZ AND SAVE ONLINE
-// ======================================
+// ------------------------------------
+// 9. SAVE SCORE TO SUPABASE
+// ------------------------------------
 
 async function finishQuiz() {
-    const saveStatus = document.getElementById("saveStatus");
-    const nextButton = document.getElementById("nextButton");
-
-    nextButton.disabled = true;
-    saveStatus.textContent = "Saving your score online...";
-
-    currentAttempt = {
-        id: null,
-        name: player,
-        score: score,
-        total: questions.length,
-        answers: playerAnswers,
-        date: new Date().toLocaleString()
-    };
-
-    document.getElementById("resultName").textContent =
-        "Well done, " + player + "!";
-
-    document.getElementById("finalScore").textContent =
-        score + " / " + questions.length;
-
-    let message = "";
-
-    if (score === questions.length) {
-        message = "Perfect score! 🏆";
-    } else if (score >= 7) {
-        message = "Excellent job! 🌟";
-    } else if (score >= 4) {
-        message = "Good try! 😊";
-    } else {
-        message = "Keep practising! 💜";
-    }
-
-    document.getElementById("resultMessage").textContent = message;
     showPage("resultPage");
 
+    document.getElementById("finalScore").innerText =
+        playerName + ", your score is " +
+        score + " / " + questions.length;
+
+    const saveMessage = document.getElementById("saveMessage");
+    saveMessage.innerText = "Saving your score online...";
+
+    if (savingScore) {
+        return;
+    }
+
+    savingScore = true;
+
     try {
-        const { data, error } = await supabaseClient
+        const { data, error } = await db
             .from("quiz_scores")
             .insert([{
-                player_name: player,
+                player_name: playerName,
                 score: score,
                 total: questions.length,
                 answers: playerAnswers
             }])
-            .select("id, player_name, score, total, answers, created_at")
-            .single();
+            .select();
 
-        if (error) throw error;
-
-        currentAttempt = {
-            id: data.id,
-            name: data.player_name,
-            score: data.score,
-            total: data.total,
-            answers: data.answers,
-            date: data.created_at
-                ? new Date(data.created_at).toLocaleString()
-                : ""
-        };
-
-        saveStatus.textContent = "✅ Your score is saved online!";
-
-    } catch (error) {
-        console.error("Supabase save error:", error);
-
-        saveStatus.textContent =
-            "❌ Online saving failed. Check Supabase permissions.";
-    } finally {
-        nextButton.disabled = false;
-    }
-}
-
-
-// ======================================
-// CREATE ANSWER REVIEW
-// ======================================
-
-function createAnswerReview(attempt) {
-    const container = document.getElementById("reviewContainer");
-    container.innerHTML = "";
-
-    if (!Array.isArray(attempt.answers)) {
-        container.textContent = "No answer details are available.";
-        return;
-    }
-
-    attempt.answers.forEach(function(answer, index) {
-        const item = document.createElement("div");
-        item.className = "review-item";
-
-        const heading = document.createElement("strong");
-        heading.textContent = (index + 1) + ". " + answer.question;
-
-        const yourAnswer = document.createElement("p");
-        yourAnswer.textContent = "Your answer: " + answer.selected;
-
-        const correctAnswer = document.createElement("p");
-        correctAnswer.textContent = "Correct answer: " + answer.correct;
-
-        const status = document.createElement("p");
-        status.textContent = answer.isCorrect
-            ? "✅ Correct"
-            : "❌ Incorrect";
-
-        item.appendChild(heading);
-        item.appendChild(yourAnswer);
-        item.appendChild(correctAnswer);
-        item.appendChild(status);
-
-        container.appendChild(item);
-    });
-}
-
-
-// ======================================
-// REVIEW MY ANSWERS
-// ======================================
-
-function viewMyAnswers() {
-    if (!currentAttempt) {
-        alert("Your quiz result was not found.");
-        return;
-    }
-
-    document.getElementById("reviewHeading").textContent =
-        currentAttempt.name + " — Score: " +
-        currentAttempt.score + " / " + currentAttempt.total;
-
-    createAnswerReview(currentAttempt);
-    showPage("reviewPage");
-}
-
-
-// ======================================
-// SHOW ONLINE RANKINGS
-// ======================================
-
-async function showHistory() {
-    if (!rankingsUnlocked) {
-        document.getElementById("historyPage").classList.add("hidden");
-        return;
-    }
-
-    const container = document.getElementById("historyContainer");
-    container.textContent = "Loading online rankings...";
-
-    showPage("historyPage");
-
-    try {
-        const { data, error } = await supabaseClient
-            .from("quiz_scores")
-            .select("id, player_name, score, total, answers, created_at")
-            .order("score", { ascending: false })
-            .order("created_at", { ascending: true });
-
-        if (error) throw error;
-
-        container.innerHTML = "";
-
-        if (!data || data.length === 0) {
-            container.textContent =
-                "No players have completed the quiz yet.";
-            return;
+        if (error) {
+            throw error;
         }
 
-        let previousScore = null;
-        let rank = 0;
-
-        data.forEach(function(row, index) {
-            const attempt = {
-                id: row.id,
-                name: row.player_name,
-                score: row.score,
-                total: row.total,
-                answers: row.answers,
-                date: row.created_at
-                    ? new Date(row.created_at).toLocaleString()
-                    : ""
-            };
-
-            if (attempt.score !== previousScore) {
-                rank = index + 1;
-            }
-
-            previousScore = attempt.score;
-
-            let medal = "";
-            let rankClass = "";
-
-            if (rank === 1) {
-                medal = "🥇";
-                rankClass = "gold";
-            } else if (rank === 2) {
-                medal = "🥈";
-                rankClass = "silver";
-            } else if (rank === 3) {
-                medal = "🥉";
-                rankClass = "bronze";
-            }
-
-            const item = document.createElement("div");
-            item.className = "history-item " + rankClass;
-
-            const heading = document.createElement("h3");
-            heading.textContent =
-                medal + " Rank " + rank + ": " + attempt.name;
-
-            const scoreText = document.createElement("p");
-            scoreText.textContent =
-                "Score: " + attempt.score + " / " + attempt.total;
-
-            const dateText = document.createElement("p");
-            dateText.className = "small-text";
-            dateText.textContent = attempt.date;
-
-            const reviewButton = document.createElement("button");
-            reviewButton.textContent = "Review Answers";
-
-            reviewButton.addEventListener("click", function() {
-                if (!rankingsUnlocked) return;
-                reviewPlayer(attempt);
-            });
-
-            item.appendChild(heading);
-            item.appendChild(scoreText);
-            item.appendChild(dateText);
-            item.appendChild(reviewButton);
-
-            container.appendChild(item);
-        });
+        saveMessage.innerText =
+            "Your score was saved successfully!";
 
     } catch (error) {
-        console.error("Supabase rankings error:", error);
+        console.error("Score saving error:", error);
 
-        container.textContent =
-            "Could not load rankings. Check your internet connection and Supabase permissions.";
+        saveMessage.innerText =
+            "Score could not be saved online. Check your Supabase table and permissions.";
+    } finally {
+        savingScore = false;
     }
 }
 
+// ------------------------------------
+// 10. REVIEW ANSWERS
+// ------------------------------------
 
-// ======================================
-// REVIEW ANOTHER PLAYER
-// ======================================
+function showReview() {
+    const reviewContent = document.getElementById("reviewContent");
+    reviewContent.innerHTML = "";
 
-function reviewPlayer(attempt) {
-    if (!rankingsUnlocked) {
-        document.getElementById("historyPage").classList.add("hidden");
-        return;
-    }
+    questions.forEach(function(q, index) {
+        const block = document.createElement("div");
+        block.style.padding = "12px";
+        block.style.marginBottom = "12px";
+        block.style.background = "#f9fafb";
+        block.style.borderRadius = "8px";
 
-    document.getElementById("reviewHeading").textContent =
-        attempt.name + " — Score: " +
-        attempt.score + " / " + attempt.total;
+        const questionTitle = document.createElement("p");
+        questionTitle.innerText =
+            (index + 1) + ". " + q.question;
 
-    createAnswerReview(attempt);
+        const yourAnswer = document.createElement("p");
+
+        const chosenIndex = playerAnswers[index];
+
+        yourAnswer.innerText =
+            "Your answer: " +
+            (chosenIndex === undefined
+                ? "Not answered"
+                : q.options[chosenIndex]);
+
+        yourAnswer.className =
+            chosenIndex === q.answer ? "correct" : "wrong";
+
+        const correctAnswer = document.createElement("p");
+        correctAnswer.innerText =
+            "Correct answer: " + q.options[q.answer];
+        correctAnswer.className = "correct";
+
+        block.appendChild(questionTitle);
+        block.appendChild(yourAnswer);
+        block.appendChild(correctAnswer);
+
+        reviewContent.appendChild(block);
+    });
+
     showPage("reviewPage");
 }
 
+// ------------------------------------
+// 11. ASK FOR RANKINGS PASSWORD
+// ------------------------------------
 
-// ======================================
-// HOME AND RESTART
-// ======================================
+function askForRankings() {
+    const password = prompt(
+        "Enter password to view Players & Rankings:"
+    );
 
-function goHome() {
+    if (password === null) {
+        return;
+    }
+
+    if (password.trim() === RANKINGS_PASSWORD) {
+        rankingsUnlocked = true;
+        showPage("historyPage");
+        loadRankings();
+    } else {
+        rankingsUnlocked = false;
+
+        document.getElementById("historyPage")
+            .classList.add("hidden");
+
+        alert("Incorrect password! Please try again.");
+    }
+}
+
+// ------------------------------------
+// 12. LOCK RANKINGS
+// ------------------------------------
+
+function lockRankings() {
     rankingsUnlocked = false;
+    document.getElementById("historyPage")
+        .classList.add("hidden");
+
     showPage("homePage");
 }
 
-function restartQuiz() {
-    document.getElementById("playerName").value = player;
-    startQuiz();
+// ------------------------------------
+// 13. LOAD ONLINE RANKINGS
+// ------------------------------------
+
+async function loadRankings() {
+    if (!rankingsUnlocked) {
+        return;
+    }
+
+    const rankingMessage =
+        document.getElementById("rankingMessage");
+
+    const rankingBody =
+        document.getElementById("rankingBody");
+
+    rankingBody.innerHTML = "";
+    rankingMessage.innerText = "Loading rankings...";
+
+    try {
+        const { data, error } = await db
+            .from("quiz_scores")
+            .select("player_name, score, total, created_at")
+            .order("score", { ascending: false })
+            .order("created_at", { ascending: true });
+
+        if (error) {
+            throw error;
+        }
+
+        if (!rankingsUnlocked) {
+            return;
+        }
+
+        rankingBody.innerHTML = "";
+
+        if (!data || data.length === 0) {
+            rankingMessage.innerText =
+                "No scores have been saved yet.";
+            return;
+        }
+
+        data.forEach(function(player, index) {
+            const row = document.createElement("tr");
+
+            const rankCell = document.createElement("td");
+            rankCell.innerText = index + 1;
+
+            const nameCell = document.createElement("td");
+            nameCell.innerText = player.player_name;
+
+            const scoreCell = document.createElement("td");
+            scoreCell.innerText = player.score;
+
+            const totalCell = document.createElement("td");
+            totalCell.innerText = player.total;
+
+            row.appendChild(rankCell);
+            row.appendChild(nameCell);
+            row.appendChild(scoreCell);
+            row.appendChild(totalCell);
+
+            rankingBody.appendChild(row);
+        });
+
+        rankingMessage.innerText =
+            "Rankings updated. Total quiz attempts: " + data.length;
+
+    } catch (error) {
+        console.error("Rankings error:", error);
+
+        rankingMessage.innerText =
+            "Could not load rankings. Check your Supabase table and SELECT permissions.";
+    }
 }
 </script>
 
